@@ -31,7 +31,7 @@ func display(event cloudevents.Event) {
 }
 
 func main() {
-	es := eventsource.New(nil, nil)
+	es = eventsource.New(nil, nil)
 	defer es.Close()
 	http.Handle("/events", es)
 	http.HandleFunc("/test", handler)
