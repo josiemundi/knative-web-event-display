@@ -10,7 +10,6 @@ import (
 	eventsource "gopkg.in/antage/eventsource.v1"
 
 	"fmt"
-	"os"
 
 	cloudevents "github.com/cloudevents/sdk-go"
 	"knative.dev/eventing-contrib/pkg/kncloudevents"
@@ -36,10 +35,7 @@ func main() {
 	http.Handle("/events", es)
 	http.HandleFunc("/test", handler)
 
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8008"
-	}
+	port := "9080"
 
 	// go func() {
 	// 	id := 1

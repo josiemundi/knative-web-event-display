@@ -6,8 +6,12 @@ metadata:
   namespace: knative-eventing-websocket-source
 spec:
   broker: default
-  subscriber:
+  filter:
+    sourceAndType:
+      type: ""
+      source: ""
+  subscriber:    
     ref:
-      apiVersion: serving.knative.dev/v1alpha1
+      apiVersion: serving.knative.dev/v1
       kind: Service
       name: event-display
