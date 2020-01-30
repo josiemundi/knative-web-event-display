@@ -37,15 +37,6 @@ func main() {
 
 	port := "9080"
 
-	// go func() {
-	// 	id := 1
-	// 	for {
-	// 		es.SendEventMessage("tick", "tick-event", strconv.Itoa(id))
-	// 		id++
-	// 		time.Sleep(2 * time.Second)
-	// 	}
-	// }()
-
 	c, err := kncloudevents.NewDefaultClient()
 	if err != nil {
 		log.Fatal("Failed to create client, ", err)
