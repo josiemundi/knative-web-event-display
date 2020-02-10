@@ -23,8 +23,9 @@ RUN CGO_ENABLED=0 GOOS=linux go build -v -o eventdisplay
 FROM alpine
 RUN apk add --no-cache ca-certificates
 
-# Copy the binary to the production image from the builder stage.
+# Copy the binary and public html to the production image from the builder stage.
 COPY --from=builder /go/src/github.com/josiemundi/knative-eventing-web-eventsource-server/eventdisplay /eventdisplay
+COPY --from=builder /go/src/github.com/josiemundi/knative-eventing-web-eventsource-server/public /public
 
 # Run the web service on container startup.
 CMD ["/eventdisplay"]

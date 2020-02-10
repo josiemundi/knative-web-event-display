@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 	"net/http"
-	"strconv"
 	"time"
 
 	eventsource "gopkg.in/antage/eventsource.v1"
@@ -25,13 +24,23 @@ func handler(w http.ResponseWriter, r *http.Request) {
 func display(event cloudevents.Event) {
 	fmt.Printf("☁️  cloudevents.Event\n%s", event.String())
 	fmt.Println(es)
-	es.SendEventMessage(event.String(), "tick-event", strconv.Itoa(id))
+	evtData, _ := event.DataBytes()
+	es.SendEventMessage(string(evtData[:]), "", "")
 	id++
 }
 
 func main() {
-	es = eventsource.New(nil, nil)
+	es = eventsource.New(
+		eventsource.DefaultSettings(),
+		func(req *http.Request) [][]byte {
+			return [][]byte{
+				[]byte("X-Accel-Buffering: no"),
+				[]byte("Access-Control-Allow-Origin: *"),
+			}
+		},
+	)
 	defer es.Close()
+	http.Handle("/", http.FileServer(http.Dir("./public")))
 	http.Handle("/events", es)
 	http.HandleFunc("/test", handler)
 
