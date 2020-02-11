@@ -13,19 +13,12 @@ In order to run this demo, you will need:
 
 - A Kubernetes cluster (a single node cluster running on Docker desktop is fine and is used to build this example)
 - kubectl
-- Istio installed (instructions below)
-- Knative installed (inctructions below)
-
-## Installing Istio
-
-To install Istio, I use the istioctl install instructions from [here](https://istio.io/docs/setup/install/istioctl/). Knative do have their own Istio installation docs but as Istio are moving away from Helm, I decided to use their own suggested install. Plus it's very simple!
-
+- Istio installed
+- Knative installed (instructions below)
 
 ## Installing Knative 
 
-To install Knative, you can follow their online instructions or you can run the install_knative.sh script included in this repo. This will do a complete install of Knative Serving, Eventing and Monitoring. For a lighter install, you can follow the below instructions for Docker Desktop:
-
-https://knative.dev/docs/install/knative-with-docker-for-mac/
+To install Knative, you can follow their online instructions or you can run the ```install_knative.sh``` script included in this repo. This will do a complete install of Knative Serving, Eventing and Monitoring. For a lighter install, you can follow the below instructions for Docker Desktop [here](https://knative.dev/docs/install/knative-with-docker-for-mac/).
 
 
 To confirm your install is complete, you can run the following command:
@@ -36,7 +29,7 @@ You should have namespaces for ```istio-system```, ```knative-eventing```, ```kn
 
 ## Building the Docker image
 
-There is already a Docker image available for this tutorial, however if you want to make your own then you could make your own image for your own go application. 
+The Docker images are already available for this tutorial, however if you want to make your own then you can build yourself. 
 
 To build a container image you will need to ensure you have a Dockerfile (there is one in this repo, which I used for building the image we deploy) and then from the directory where it is located, you can run the following commands (ensure you are also logged into your image repo account e.g Dockerhub):
 
@@ -77,9 +70,11 @@ Run the following:
 
 ```kubectl apply -f 010-deployment.yaml``` This deploys the application as a Kubernetes app deployment. It declares the sink as the default broker within the relevant namespace. 
 
-```kubectl apply - 040-trigger.yaml``` This is our trigger, which is where we specify which services would like to subscribe to which type of events. 
+```kubectl apply -f 040-trigger.yaml``` This is our Knative eventing trigger, which is where we specify which services would like to subscribe to which type of events. 
 
-```kubectl apply - 030-service.yaml``` This is our Knative serving service deployment, which will subscribe to the events coming from our application and display them. 
+```kubectl apply -f 050-kubernetesdeploy.yaml``` This is our Kubernetes application deployment, which will subscribe to the events coming from our application and display them. 
+
+```kubectl apply -f 060-kubernetesservice.yaml``` This is our Kubernetes service file to specify the necessary ports etc.
 
 ## Verifying messages:
 
