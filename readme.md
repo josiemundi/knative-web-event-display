@@ -7,7 +7,7 @@ This demo will be built out over time to include multiple consumer services, how
 
 Below is a diagram of this initial version:
 
-![Diagram](images/knativedemooverview.png)
+![Diagram](images/knativedemooverviewsf.png)
 
 In order to run this demo, you will need:
 
