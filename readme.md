@@ -1,9 +1,9 @@
 # Knative Eventing - Streaming Blockchain Transactions as CloudEvents
-This project explores Knative Eventing. The aim of the project is to deploy a go application that streams messages to a Knative broker, where a service (event display) can subscribe to the events and they can be displayed in real time via a UI. 
+This project explores Knative Eventing. The aim of the project is to show a how a stream of events can be consumed using Knative Eventing. In this tutorial, you will deploy a go application that streams messages to a Knative broker. A service (event display) can subscribe to the events and they can be displayed in real time via a UI. 
 
-The message stream data is from the blockchain.info WebSocket API and sends information about new bitcoin transactions in real-time. You can find more information about this service [here](https://www.blockchain.com/api/api_websocket).
+The message stream source is the blockchain.info WebSocket API and sends information about new bitcoin transactions in real-time. You can find more information about this service [here](https://www.blockchain.com/api/api_websocket).
 
-This demo will be built out over time to include multiple consumer services, however for now we will have one source, a broker, trigger and one consumer/subscriber. In the case where you only have one consumer/subscriber, you can sink straight to there (in this case that would be the event-display service). However, as it is the hope that this tutorial will be extended to include multiple, the broker and trigger will be used.
+This demo will be built out over time to include multiple consumer services, however for now we have one source, a broker, trigger and one consumer/subscriber. In the case where you only have one consumer/subscriber, you can also sink straight to there (in this case that would be the event-display service). However, as it is the hope that this tutorial will be extended to include multiple, the broker and trigger will be used.
 
 Below is a diagram of this initial version:
 
@@ -13,7 +13,7 @@ In order to run this demo, you will need:
 
 - A Kubernetes cluster (a single node cluster running on Docker desktop is fine and is used to build this example)
 - kubectl
-- Istio installed
+- Istio installed (or another Gateway provider such as Gloo)
 - Knative installed (instructions below)
 
 ## Installing Knative 
@@ -27,9 +27,13 @@ To confirm your install is complete, you can run the following command:
 
 You should have namespaces for ```istio-system```, ```knative-eventing```, ```knative-serving``` (and ```knative-monitoring``` if you have installed using the install script).
 
+You can also see the components deployed by running:
+
+```kubectl get pods -n <namespace>```
+
 ## Building the Docker image
 
-The Docker images are already available for this tutorial, however if you want to make your own then you can build yourself. 
+The Docker images are already available for the event display service in this tutorial, however if you want to make your own then you can build yourself. The files for the Event Source are at the following [link](https://github.com/josiemundi/blockchain-websocket-cloudevents) if you would also like to build your own image for the 010-deployment. 
 
 To build a container image you will need to ensure you have a Dockerfile (there is one in this repo, which I used for building the image we deploy) and then from the directory where it is located, you can run the following commands (ensure you are also logged into your image repo account e.g Dockerhub):
 
@@ -60,7 +64,7 @@ Knative serving does not currently allow multiple ports so the Event Display par
 
 ### Set up namespace and verify broker is ready
 
-First ```kubectl apply -f 001-namespace.yaml``` This will deploy the knative-eventing-websocket-source namespace and enable the knative-eventing injection. 
+First ```kubectl apply -f 001-namespace.yaml``` This will deploy the ```knative-eventing-websocket-source``` namespace and enable the knative-eventing injection. 
 
 Verify that the default broker is ready by running ```kubectl get broker -n <namespace>``` and you should see that the default broker has a status of READY=True. 
 
